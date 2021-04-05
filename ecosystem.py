@@ -1,6 +1,10 @@
 from birds import bird
 from forestry import forest
-import random
+
+try:
+    import random as random
+except:
+    raise ImportError("Unable to import required modules. Please install the requirements.txt file.")
 
 class ecosystem():
     # This class represents the ecosystem in which birds and the forest is stored 
@@ -43,9 +47,15 @@ class ecosystem():
 
             self.allBirds.append(newBird)
 
-    def spawnForest(self, totalSpace):
-        # Create a forest class that contains a nsormal distribution of food
+    def spawnForest(self, totalSpaces, calorieMean, calorieSD, growthMean, growthSD):
+        # Create a forest class that contains a normal distribution of food
         # with a normal distribution of growth (perhaps create a second distribution and add it to the first)
+        
+        return 0
+
+    def time(self):
+        # A day passes in the ecosystem, with the time function called for all envrionments, currently only the forest
+
         return 0
 
 

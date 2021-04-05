@@ -1,3 +1,8 @@
+try:
+    import random 
+except:
+    raise ImportError("Unable to import required modules. Please install the requirements.txt file.")
+
 class bird():
     # This class represents a single bird in an ecosystem  
 
@@ -9,12 +14,14 @@ class bird():
         self.calorieLimit = 0
         self.dailySpend = 0
         self.alive = True
+        self.startingCalories = 0 
     
     def setBirdChars(self, species, gender, startingCalories, calorieLimit, dailySpend):
         # Set bird characteristics 
         self.species = species.upper()
         self.gender = gender.upper()
         self.calories = startingCalories
+        self.startingCalories = startingCalories
 
         # Set caloric limits and spending  
         self.calorieLimit = calorieLimit
@@ -65,10 +72,28 @@ class bird():
 
             # if both are hawks, simulate random fight and distrbute unequally 
             if self.isHawk():
-                pass
+                if random.randint(1, 10) <= 5:
+                    self.addCalories(totalCalories * 0.7)
+                    other.addCalories(totalCalories * 0.3)
 
         # If both are unequal, distribute unequally 
         else:
-            pass 
+            if self.isDove():
+                self.addCalories(totalCalories * 0.3)
+                other.addCalories(totalCalories * 0.7)
+            else:
+                self.addCalories(totalCalories * 0.7)
+                other.addCalories(totalCalories * 0.3)
         
         return 0
+    
+    def procreate(self, other):
+        # Check to see if both birds can procreate
+
+        if not self.gender == other.gender:
+            return []
+        
+        offspring = bird()
+        offspring_gender = "M" if random.random() < 0.5 else "F"
+        offspring.setBirdChars(self.species, offspring_gender, self.startingCalories, self.calorieLimit, self.dailySpend)
+        return [offspring]
