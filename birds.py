@@ -6,7 +6,7 @@ except:
 class bird():
     # This class represents a single bird in an ecosystem  
 
-    def __init__(self):
+    def __init__(self, simulation_logger=None):
         self.isSet = False
         self.species = ""
         self.gender = ""
@@ -88,7 +88,7 @@ class bird():
         return 0
     
     def procreate(self, other):
-        # Check to see if both birds can procreate
+        # Check to see if both birds can procreate and return array with results
 
         if not self.gender == other.gender:
             return []
@@ -97,3 +97,5 @@ class bird():
         offspring_gender = "M" if random.random() < 0.5 else "F"
         offspring.setBirdChars(self.species, offspring_gender, self.startingCalories, self.calorieLimit, self.dailySpend)
         return [offspring]
+
+# TODO: Test Bird Code

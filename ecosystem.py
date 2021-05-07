@@ -10,7 +10,7 @@ class ecosystem():
     # This class represents the ecosystem in which birds and the forest is stored 
     # You can spawn the birds, the forest and simulate a day passing. 
 
-    def __init__(self):
+    def __init__(self, simulation_logger=None):
         self.doves = 0
         self.hawks = 0
         self.time = 0
@@ -26,24 +26,29 @@ class ecosystem():
     def totalPopulation(self):
         return self.doves + self.hawks 
     
-    def spawnBirds(self, total, dovePercent, malePercent=0.5):
+    def spawnBirds(self, total, dovePercent, startingCalories, calorieLimit, dailySpend, malePercent=0.5):
         # Include error checking for dovePercent, total and malePecent
         newBird = bird()
 
         for elem in range(0, total):
             # get random species according to malePercent
             if random.random() <= dovePercent:
-                newBird.setSpecies("D")
+                newBird.species = "D"
                 self.doves += 1
             else:
-                newBird.setSpecies("H")
+                newBird.species = "H"
                 self.hawks += 1
 
             # get random gender according to malePercent
             if random.random() <= malePercent:
-                newBird.setGender("M")
+                newBird.gender = "M"
             else:
-                newBird.setGender("F")
+                newBird.gender = "F"
+
+            # Set caloric values 
+            newBird.startingCalories = startingCalories
+            newBird.calorieLimit = calorieLimit
+            newBird.dailySpend = dailySpend
 
             self.allBirds.append(newBird)
 
@@ -60,5 +65,5 @@ class ecosystem():
 
 
 eco = ecosystem()
-eco.spawnBirds(100, 0.5)
+eco.spawnBirds(100, 0.5, 1000, 5000, 100)
 print(eco.totalPopulation(), eco.numOfDoves(), eco.numOfHawks())     

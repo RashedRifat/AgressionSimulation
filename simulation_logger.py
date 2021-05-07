@@ -6,7 +6,7 @@ except:
 class simulation_logger():
     def __init__(self):
         self.df_columns = ["day", "num_of_doves", "num_of_hawks", "population", 
-                                            "dove_births", "dove_deaths", "hawk_births", "hawk_deaths"]
+                            "dove_births", "dove_deaths", "hawk_births", "hawk_deaths"]
         self.df = pd.DataFrame(columns=self.df_columns)
         self.day_counter = -1
         
@@ -51,7 +51,7 @@ class simulation_logger():
             try:
                 print(self.df.loc[day])
             except:
-                print(f"day {day} does not exist within the simulation")
+                print(f"day {day} does not exist within the simulation.")
         
         # else, show the first 5 entries 
         else:

@@ -5,11 +5,13 @@ except:
     raise ImportError("Unable to import required modules. Please install the requirements.txt file.")
 
 class clearing():
-    def __init__(self, calories, growthMean, growthSD):
+    def __init__(self, calories, growthMean, growthSD, consumePerMeal=0.7, simulation_logger=None):
         self.calories = calories
         self.growthMean = growthMean
         self.growthSD = growthSD
+        self.consumePerMeaal = consumePerMeal
         self.birds = []
+        self.simulation_logger = simulation_logger
 
     def occupy(self, bird1, bird2):
         self.birds = [bird1, bird2]
@@ -19,30 +21,35 @@ class clearing():
         self.calories += np.random.normal(loc=self.growthMean, scale=self.growthSD, size=1)
     
     def resolve(self):
-        # Call birds[0].aggresion(birds[1]), which should be a function to resolve calorie values 
-        # Should also return the loss of calories in the clearing. The proportion that the birds graze on 
-        # should be determined by the user
-        # Should also call the procreate function for these birds and return the birds that are alive, including births
+        # Resolves the agression between two birds and checks for procreation 
+        # Only part of the clearings calories are consumed 
 
+        partialCalories = self.calories * self.consumePerMeal
+        self.calories -= partialCalories
+        self.birds[0].aggresion(self.birds[1])
 
-        return []
+        return self.birds[0].procreate(self.birds[1])
     
     def time(self):
         # A day passes in the clearing
-        # Call bird.time() function and update the results into a Pandas DataFrame, via a logger object
-        # Should return an array of birds that survived/were born from the resolve function
+        # TODO: Call bird.time() function and update the results into a Pandas DataFrame, via a logger object
+        # TODO: Should return an array of birds that survived/were born from the resolve function
 
-        self.resolve()
+        # Resolve aggression, procreation and clearing growth. Log the child (if there is a child). 
+        children = self.resolve()
         self.growth()
-        return []
+
+        # Call time for all birds (children are excluded). Log results. 
+        return children
 
 
 class forest():
-    def __init__(self, totalSpaces, calorieMean, calorieSD, growthMean, growthSD):
+    def __init__(self, totalSpaces, calorieMean, calorieSD, growthMean, growthSD, simulation_logger=None):
         self.totalSpaces = totalSpaces
         self.spaces = []
         self.allBirds = []
         self.nonOccupiedBirds = []
+        self.simulation_logger = simulation_logger
     
     def load(self, allBirds):
         self.allBirds = allBirds
@@ -62,3 +69,5 @@ class forest():
 
 newClearing = clearing(10, 0, 1)
 newClearing.growth()
+
+# TODO: Test clearing and forestry code using a simulation_logger
