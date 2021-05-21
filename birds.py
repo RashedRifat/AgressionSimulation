@@ -63,7 +63,11 @@ class bird():
     def aggresion(self, other, totalCalories):
         # Resolve the aggresion between two birds 
 
-        if self.gender == other.gender:
+        if self.alive == False or other.alive == False:
+            return 0 
+
+        # Check to see if both birds are of the same species 
+        if self.species == other.species:
 
             # If both are doves, distribute calories equally 
             if self.isDove():
@@ -89,6 +93,9 @@ class bird():
     
     def procreate(self, other):
         # Check to see if both birds can procreate and return array with results
+
+        if self.alive == False or other.alive == False:
+            return []
 
         if not self.gender == other.gender:
             return []

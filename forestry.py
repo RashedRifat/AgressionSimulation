@@ -26,20 +26,25 @@ class clearing():
 
         partialCalories = self.calories * self.consumePerMeal
         self.calories -= partialCalories
-        self.birds[0].aggresion(self.birds[1])
+        self.birds[0].aggresion(self.birds[1], partialCalories)
 
         return self.birds[0].procreate(self.birds[1])
     
     def time(self):
         # A day passes in the clearing
-        # TODO: Call bird.time() function and update the results into a Pandas DataFrame, via a logger object
-        # TODO: Should return an array of birds that survived/were born from the resolve function
+        # This function returns the new children, if generated 
+
+        # Let time pass for each bird and log results 
+        for bird in self.birds:
+            bird.time()
+            self.simulation_logger.add(bird)
 
         # Resolve aggression, procreation and clearing growth. Log the child (if there is a child). 
         children = self.resolve()
+        for bird in children:
+            self.simulation_logger.add(bird, child=True)
         self.growth()
 
-        # Call time for all birds (children are excluded). Log results. 
         return children
 
 

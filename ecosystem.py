@@ -60,6 +60,7 @@ class ecosystem():
 
     def time(self):
         # A day passes in the ecosystem, with the time function called for all envrionments, currently only the forest
+        # Should call time function on the simulation_logger, creating a new day. 
 
         return 0
 

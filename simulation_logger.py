@@ -58,6 +58,32 @@ class simulation_logger():
             print(self.df.head())
         
         return 0
+
+    def add(self, bird, child=False):
+        # Increment a bird based on its charactersitics 
+
+        # Handle if bird is alive 
+        if bird.alive:
+
+            # Handle if bird is dove or haw
+            if bird.isDove():
+                self.increment(num_of_doves=1)
+
+                # If the bird is a child, increment approiately 
+                if child:
+                    self.increment(dove_births=1)
+            else:
+                self.increment(num_of_hawks=1)
+                if child:
+                    self.increment(hawk_deaths=1)
+                    
+        # If the bird is dead, add to the death index 
+        else:
+            if bird.isDove():
+                self.increment(dove_deaths=1)
+            else:
+                self.increment(haek_deaths=1)        
+                
     
     def save(self, filename="simulation_results"):
         # Save the csv to the results folder, with a supplied filename
