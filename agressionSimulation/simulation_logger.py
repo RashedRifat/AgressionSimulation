@@ -75,14 +75,14 @@ class simulation_logger():
             else:
                 self.increment(num_of_hawks=1)
                 if child:
-                    self.increment(hawk_deaths=1)
+                    self.increment(hawk_births=1)
                     
         # If the bird is dead, add to the death index 
         else:
             if bird.isDove():
                 self.increment(dove_deaths=1)
             else:
-                self.increment(haek_deaths=1)        
+                self.increment(hawk_deaths=1)        
                 
     
     def save(self, filename="simulation_results"):

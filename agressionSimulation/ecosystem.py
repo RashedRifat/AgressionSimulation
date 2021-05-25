@@ -1,6 +1,3 @@
-from birds import bird
-from forestry import forest
-
 try:
     import random as random
 except:
@@ -65,6 +62,6 @@ class ecosystem():
         return 0
 
 
-eco = ecosystem()
-eco.spawnBirds(100, 0.5, 1000, 5000, 100)
-print(eco.totalPopulation(), eco.numOfDoves(), eco.numOfHawks())     
+# eco = ecosystem()
+# eco.spawnBirds(100, 0.5, 1000, 5000, 100)
+# print(eco.totalPopulation(), eco.numOfDoves(), eco.numOfHawks())     

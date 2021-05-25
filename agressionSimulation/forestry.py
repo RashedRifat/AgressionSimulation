@@ -9,7 +9,7 @@ class clearing():
         self.calories = calories
         self.growthMean = growthMean
         self.growthSD = growthSD
-        self.consumePerMeaal = consumePerMeal
+        self.consumePerMeal = consumePerMeal
         self.birds = []
         self.simulation_logger = simulation_logger
 
@@ -18,7 +18,7 @@ class clearing():
     
     def growth(self):
         # Growth of the clearing in a single day 
-        self.calories += np.random.normal(loc=self.growthMean, scale=self.growthSD, size=1)
+        self.calories += int(np.random.normal(loc=self.growthMean, scale=self.growthSD, size=1))
     
     def resolve(self):
         # Resolves the agression between two birds and checks for procreation 
@@ -46,7 +46,6 @@ class clearing():
         self.growth()
 
         return children
-
 
 class forest():
     def __init__(self, totalSpaces, calorieMean, calorieSD, growthMean, growthSD, simulation_logger=None):

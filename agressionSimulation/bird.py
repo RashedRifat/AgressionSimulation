@@ -56,14 +56,22 @@ class bird():
         return False
     
     def addCalories(self, cals):
+        if not isinstance(cals, (int, float)) or cals < 0:
+            raise ValueError("cals should be an integer greater than 0")
+
         self.calories += cals
         if self.calories > self.calorieLimit:
             self.calories = self.calorieLimit
     
     def aggresion(self, other, totalCalories):
-        # Resolve the aggresion between two birds 
+        if not other or not isinstance(other, bird):
+            raise TypeError("other should be a bird object!")
+        
+        if not isinstance(totalCalories, (int, float)) or totalCalories < 0:
+            raise ValueError("totalCalories should be greater than 0", totalCalories)
 
-        if self.alive == False or other.alive == False:
+        # Resolve the aggresion between two birds 
+        if not self.alive or not other.alive:
             return 0 
 
         # Check to see if both birds are of the same species 
@@ -79,6 +87,9 @@ class bird():
                 if random.randint(1, 10) <= 5:
                     self.addCalories(totalCalories * 0.7)
                     other.addCalories(totalCalories * 0.3)
+                else:
+                    self.addCalories(totalCalories * 0.3)
+                    other.addCalories(totalCalories * 0.7)
 
         # If both are unequal, distribute unequally 
         else:
@@ -94,15 +105,16 @@ class bird():
     def procreate(self, other):
         # Check to see if both birds can procreate and return array with results
 
-        if self.alive == False or other.alive == False:
+        if not other or not isinstance(other, bird):
+            raise TypeError("bird should be a bird object!")
+
+        if not self.alive or not other.alive:
             return []
 
-        if not self.gender == other.gender:
+        if self.gender == other.gender or self.species != other.species:
             return []
         
         offspring = bird()
         offspring_gender = "M" if random.random() < 0.5 else "F"
         offspring.setBirdChars(self.species, offspring_gender, self.startingCalories, self.calorieLimit, self.dailySpend)
         return [offspring]
-
-# TODO: Test Bird Code
