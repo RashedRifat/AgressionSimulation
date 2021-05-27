@@ -1,3 +1,5 @@
+from agressionSimulation import bird
+
 try:
     import random as random
 except:
@@ -10,7 +12,7 @@ class ecosystem():
     def __init__(self, simulation_logger=None):
         self.doves = 0
         self.hawks = 0
-        self.time = 0
+        #self.time = 0
         self.allBirds = []
         self.forest = ""
     

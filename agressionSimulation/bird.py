@@ -3,6 +3,7 @@ try:
 except:
     raise ImportError("Unable to import required modules. Please install the requirements.txt file.")
 
+NoneType = type(None)
 class bird():
     # This class represents a single bird in an ecosystem  
 
@@ -64,11 +65,16 @@ class bird():
             self.calories = self.calorieLimit
     
     def aggresion(self, other, totalCalories):
-        if not other or not isinstance(other, bird):
+        if not isinstance(other, (bird, NoneType)):
             raise TypeError("other should be a bird object!")
         
         if not isinstance(totalCalories, (int, float)) or totalCalories < 0:
             raise ValueError("totalCalories should be greater than 0", totalCalories)
+        
+        # If there is no opposing bird 
+        if other == None:
+            self.addCalories(totalCalories)
+            return 
 
         # Resolve the aggresion between two birds 
         if not self.alive or not other.alive:
@@ -105,8 +111,11 @@ class bird():
     def procreate(self, other):
         # Check to see if both birds can procreate and return array with results
 
-        if not other or not isinstance(other, bird):
+        if not isinstance(other, (bird, NoneType)):
             raise TypeError("bird should be a bird object!")
+
+        if other == None:
+            return []
 
         if not self.alive or not other.alive:
             return []

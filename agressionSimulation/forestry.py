@@ -1,8 +1,11 @@
 try:
     import random as random
     import numpy as np
+    import agressionSimulation as sim
 except:
     raise ImportError("Unable to import required modules. Please install the requirements.txt file.")
+
+NoneType = type(None)
 
 class clearing():
     def __init__(self, calories, growthMean, growthSD, consumePerMeal=0.7, simulation_logger=None):
@@ -14,7 +17,19 @@ class clearing():
         self.simulation_logger = simulation_logger
 
     def occupy(self, bird1, bird2):
+        if not bird1 or not isinstance(bird1, sim.bird) or not isinstance(bird2, (sim.bird, NoneType)):
+            raise TypeError("either bird1 or bird2 should be bird objects")
+
         self.birds = [bird1, bird2]
+    
+    def occupy(self, bird1):
+        if not isinstance(bird1, sim.bird):
+            raise TypeError("bird1 should not be none")
+        
+        if len(self.birds) == 2:
+            raise ValueError("Cannot occupy, clearing is full")
+        
+        self.birds.append(bird1)
     
     def growth(self):
         # Growth of the clearing in a single day 
@@ -36,6 +51,8 @@ class clearing():
 
         # Let time pass for each bird and log results 
         for bird in self.birds:
+            if bird is None:
+                continue
             bird.time()
             self.simulation_logger.add(bird)
 
@@ -59,9 +76,17 @@ class forest():
         self.allBirds = allBirds
     
     def occupy(self):
-        # Distribute the birds randomly across the spaces 
-        # Birds that did not find a clearing should be added to the nonOccupiedBirds territory
+        # Create all spaces  
+        for i in range(0, self.totalSpaces):
+            self.spaces.append(clearing())           
         
+        # Distribute all birds across the spaces 
+        # Birds that did not find a clearing should be added to the nonOccupiedBirds list
+        random.shuffle(self.allBirds)
+        spacesCounter = 0
+        birdCounter = 0
+
+
         return 0
 
     def time(self):
@@ -70,8 +95,3 @@ class forest():
         # Finally, update the allBirds array to reflect the changes (birth/death) of these birds 
 
         return 0
-
-newClearing = clearing(10, 0, 1)
-newClearing.growth()
-
-# TODO: Test clearing and forestry code using a simulation_logger
