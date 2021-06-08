@@ -127,3 +127,7 @@ class bird():
         offspring_gender = "M" if random.random() < 0.5 else "F"
         offspring.setBirdChars(self.species, offspring_gender, self.startingCalories, self.calorieLimit, self.dailySpend)
         return [offspring]
+    
+    def show(self):
+        to_string = f"Status: {self.alive} | Bird Gender: {self.gender} | Bird Species: {self.species}"
+        return to_string

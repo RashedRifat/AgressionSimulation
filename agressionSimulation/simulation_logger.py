@@ -6,7 +6,8 @@ except:
 class simulation_logger():
     def __init__(self):
         self.df_columns = ["day", "num_of_doves", "num_of_hawks", "population", 
-                            "dove_births", "dove_deaths", "hawk_births", "hawk_deaths"]
+                            "dove_births", "dove_deaths", "hawk_births", "hawk_deaths", "total_calories",
+                            "calories_after_feeding"]
         self.df = pd.DataFrame(columns=self.df_columns)
         self.day_counter = -1
         
@@ -84,6 +85,14 @@ class simulation_logger():
             else:
                 self.increment(hawk_deaths=1)        
                 
+
+    def add_space(self, data):
+        # Add the calories of a space 
+        col1 = "total_calories"
+        col2 = "calories_after_feeding"
+
+        self.df.loc[self.day_counter, col1] += data[0]
+        self.df.loc[self.day_counter, col2] += data[1]
     
     def save(self, filename="simulation_results"):
         # Save the csv to the results folder, with a supplied filename

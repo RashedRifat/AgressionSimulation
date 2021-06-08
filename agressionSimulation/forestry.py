@@ -16,12 +16,6 @@ class clearing():
         self.consumePerMeal = consumePerMeal
         self.birds = []
         self.simulation_logger = simulation_logger
-
-    def occupy(self, bird1, bird2):
-        if not bird1 or not isinstance(bird1, sim.bird) or not isinstance(bird2, (sim.bird, NoneType)):
-            raise TypeError("either bird1 or bird2 should be bird objects")
-
-        self.birds = [bird1, bird2]
     
     def occupy(self, bird1):
         if not isinstance(bird1, sim.bird):
@@ -42,17 +36,24 @@ class clearing():
 
         partialCalories = self.calories * self.consumePerMeal
         self.calories -= partialCalories
-        self.birds[0].aggresion(self.birds[1], partialCalories)
 
-        return self.birds[0].procreate(self.birds[1])
-    
+        if len(self.birds) == 1:
+            self.birds[0].aggresion(None, partialCalories)
+            return []
+        elif len(self.birds) == 2:
+                self.birds[0].aggresion(self.birds[1], partialCalories)
+                return self.birds[0].procreate(self.birds[1])
+        else:
+            return []
+
     def reset(self):
-        del self.birds
         self.birds = []
     
     def time(self):
         # A day passes in the clearing
         # This function returns the new children, if generated 
+
+        old_cals = self.calories
 
         # Let time pass for each bird and log results 
         for bird in self.birds:
@@ -67,6 +68,10 @@ class clearing():
             self.simulation_logger.add(bird, child=True)
         self.growth()
 
+        new_cals = self.calories
+
+        # Add the value of the calories to the correct environment 
+        self.simulation_logger.add_space(data=[old_cals, new_cals])
         return children
 
 class forest():
@@ -94,7 +99,6 @@ class forest():
     def occupy(self):
         # Shuffle all the birds 
         random.shuffle(self.allBirds)
-        occupiedBirdCounter = 0
         birdCounter = 0
 
         # Iterate through the birds and attempt to add them to a clearing 
@@ -113,6 +117,7 @@ class forest():
                 randomSpace = random.randint(0, self.totalSpaces)
                 try:
                     self.spaces[randomSpace].occupy(bird)
+                    break
                 except:
                     continue 
 
@@ -124,6 +129,7 @@ class forest():
             
 
     def time(self):
+        self.occupy()
 
         # Should call the time function on all clearings, adding new birds to the total birds list 
         for clring in self.spaces:
@@ -138,6 +144,6 @@ class forest():
             bird.time()
             self.simulation_logger.add(bird)
         
-        # Reset the list, cleaning up memory as we go
-        del self.nonOccupiedBirds
+        # Reset the list
         self.nonOccupiedBirds = []
+        self.simulation_logger.new_day()
