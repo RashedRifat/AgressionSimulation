@@ -9,13 +9,13 @@ NoneType = type(None)
 
 class clearing():
     
-    def __init__(self, calories, growthMean, growthSD, consumePerMeal=0.7, simulation_logger=None):
+    def __init__(self, calories, growthMean, growthSD, simulation_logger, consumePerMeal=0.7,):
         self.calories = calories
         self.growthMean = growthMean
         self.growthSD = growthSD
         self.consumePerMeal = consumePerMeal
         self.birds = []
-        self.simulation_logger = simulation_logger
+        self.sl = simulation_logger
     
     def occupy(self, bird1):
         if not isinstance(bird1, sim.bird):
@@ -60,23 +60,23 @@ class clearing():
             if bird is None:
                 continue
             bird.time()
-            self.simulation_logger.add(bird)
+            self.sl.add(bird, child=False)
 
         # Resolve aggression, procreation and clearing growth. Log the child (if there is a child). 
         children = self.resolve()
         if children:
-            self.simulation_logger.add(bird, child=True)
+            self.sl.add(bird, child=True)
         self.growth()
 
         new_cals = self.calories
 
         # Add the value of the calories to the correct environment 
-        self.simulation_logger.add_space(data=[old_cals, new_cals])
+        self.sl.add_space(data=[old_cals, new_cals])
         return children
 
 class forest():
 
-    def __init__(self, totalSpaces, calorieMean, calorieSD, growthMean, growthSD, maxSearch=3, simulation_logger=None):
+    def __init__(self, totalSpaces, calorieMean, calorieSD, growthMean, growthSD, simulation_logger, maxSearch=3):
         self.totalSpaces = totalSpaces
         self.spaces = []
         self.allBirds = []
@@ -86,7 +86,7 @@ class forest():
         self.calorieSD = calorieSD
         self.growthMean = growthMean
         self.growthSD = growthSD
-        self.simulation_logger = simulation_logger
+        self.sl = simulation_logger
     
     def load(self, allBirds):
         self.allBirds = allBirds
@@ -94,7 +94,7 @@ class forest():
         # Create all spaces  
         for i in range(0, self.totalSpaces):
             calories = int(np.random.normal(loc=self.calorieMean, scale=self.calorieSD, size=1))
-            self.spaces.append(clearing(calories, self.growthMean, self.growthSD, simulation_logger=self.simulation_logger))           
+            self.spaces.append(clearing(calories, self.growthMean, self.growthSD, self.sl))           
     
     def occupy(self):
         # Shuffle all the birds 
@@ -134,7 +134,7 @@ class forest():
         # Should call the time function on all clearings, adding new birds to the total birds list 
         for clring in self.spaces:
             possibleChild = clring.time()
-            if possibleChild is not None:
+            if len(possibleChild) != 0:
                 self.allBirds.extend(possibleChild)
 
             clring.reset()
@@ -142,8 +142,14 @@ class forest():
         # Finally, process all the birds in the non-occupied list 
         for bird in self.nonOccupiedBirds:
             bird.time()
-            self.simulation_logger.add(bird)
+            self.sl.add(bird)
         
         # Reset the list
         self.nonOccupiedBirds = []
-        self.simulation_logger.new_day()
+    
+    def debug(self):
+        self.occupy()
+
+        for space in self.spaces:
+            for elem in range(0, len(space.birds)):
+                print(f"{elem}: is {'alive' if space.birds[elem].alive else 'dead'}")

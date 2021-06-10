@@ -9,7 +9,7 @@ sl = simulation_logger()
 sl.new_day()
 
 # Create forest object
-fr = forest(2, 10, 1, 1, 0.1, 3, sl)
+fr = forest(2, 10, 1, 1, 0.1, sl)
 
 # Test the load function 
 fr.load([bird1, bird2])
@@ -23,10 +23,11 @@ for cl in fr.spaces:
     count_birds += len(cl.birds)
 
 # Test the time function via the simulation_logger save function 
-fr = forest(2, 10, 1, 1, 0.1, 3, sl)
+fr = forest(2, 10, 1, 1, 0.1, sl)
 fr.load([bird1, bird2])
 for day in range(0, 25):
     fr.time()
+    sl.new_day()
 
 sl.save()
 print("Passed all forestry tests!")

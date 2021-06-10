@@ -44,21 +44,9 @@ class simulation_logger():
         if hawk_deaths is not None:
             self.df.loc[self.day_counter, "hawk_deaths"] += hawk_deaths
 
-    def show(self, day=None):
-        # Show the status of the current simulation
-
-        # If day is specificed, print that day
-        if day is not None:
-            try:
-                print(self.df.loc[day])
-            except:
-                print(f"day {day} does not exist within the simulation.")
-        
-        # else, show the first 5 entries 
-        else:
-            print(self.df.head())
-        
-        return 0
+    def show(self, n=5):
+        # Show a preview of the results 
+        print(self.df.head(n=5))
 
     def add(self, bird, child=False):
         # Increment a bird based on its charactersitics 
@@ -91,11 +79,11 @@ class simulation_logger():
         col1 = "total_calories"
         col2 = "calories_after_feeding"
 
-        self.df.loc[self.day_counter, col1] += data[0]
-        self.df.loc[self.day_counter, col2] += data[1]
+        self.df.loc[self.day_counter, col1] += round(data[0], 2)
+        self.df.loc[self.day_counter, col2] += round(data[1], 2)
     
     def save(self, filename="simulation_results"):
-        # Save the csv to the results folder, with a supplied filename
 
+        # Save the csv to the results folder, with a supplied filename
         self.df.to_csv(f"results//{filename.strip()}.csv")
 

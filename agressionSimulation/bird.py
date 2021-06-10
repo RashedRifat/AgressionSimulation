@@ -7,7 +7,7 @@ NoneType = type(None)
 class bird():
     # This class represents a single bird in an ecosystem  
 
-    def __init__(self, simulation_logger=None):
+    def __init__(self, id):
         self.isSet = False
         self.species = ""
         self.gender = ""
@@ -16,6 +16,7 @@ class bird():
         self.dailySpend = 0
         self.alive = True
         self.startingCalories = 0 
+        self.id = id
     
     def setBirdChars(self, species, gender, startingCalories, calorieLimit, dailySpend):
         # Set bird characteristics 
@@ -69,7 +70,8 @@ class bird():
             raise TypeError("other should be a bird object!")
         
         if not isinstance(totalCalories, (int, float)) or totalCalories < 0:
-            raise ValueError("totalCalories should be greater than 0", totalCalories)
+            return
+            #raise ValueError("totalCalories should be greater than 0, not", totalCalories)
         
         # If there is no opposing bird 
         if other == None:
@@ -123,7 +125,7 @@ class bird():
         if self.gender == other.gender or self.species != other.species:
             return []
         
-        offspring = bird()
+        offspring = bird("[" + str(self.id) + " | " + str(other.id) + "]")
         offspring_gender = "M" if random.random() < 0.5 else "F"
         offspring.setBirdChars(self.species, offspring_gender, self.startingCalories, self.calorieLimit, self.dailySpend)
         return [offspring]
