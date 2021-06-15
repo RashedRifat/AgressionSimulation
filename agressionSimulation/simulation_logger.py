@@ -1,7 +1,8 @@
 try:
     import pandas as pd
-except:
-    raise ImportError("Unable to import required modules. Please install the requirements.txt file.")
+    import matplotlib.pyplot as plt
+except ImportError as ex:
+    raise ImportError("Unable to import required modules. Please install the requirements.txt file.\n" + ex.with_traceback())
 
 class simulation_logger():
     def __init__(self):
@@ -22,8 +23,8 @@ class simulation_logger():
     
     def increment(self, num_of_doves=None, num_of_hawks=None, 
                         dove_births=None, dove_deaths=None, hawk_births=None, hawk_deaths=None):
-        # Increment the values recoreded within the csv 
-
+       
+        # Increment the values recoreded within the database 
         if num_of_doves is not None:
             self.df.loc[self.day_counter, "num_of_doves"] += num_of_doves
             self.df.loc[self.day_counter, "population"] += num_of_doves
@@ -46,7 +47,7 @@ class simulation_logger():
 
     def show(self, n=5):
         # Show a preview of the results 
-        print(self.df.head(n=5))
+        print(self.df.head(n=n))
 
     def add(self, bird, child=False):
         # Increment a bird based on its charactersitics 
@@ -66,7 +67,7 @@ class simulation_logger():
                 if child:
                     self.increment(hawk_births=1)
                     
-        # If the bird is dead, add to the death index 
+        # If the bird is dead, add to the death counter 
         else:
             if bird.isDove():
                 self.increment(dove_deaths=1)
@@ -86,4 +87,53 @@ class simulation_logger():
 
         # Save the csv to the results folder, with a supplied filename
         self.df.to_csv(f"results//{filename.strip()}.csv")
+    
+    def make_population_graph(self, filename=""):
+        plt.plot(range(0, self.df.shape[0]), self.df["population"])
+        plt.title("Population of Birds Over Time")
+        plt.xlabel("Days")
+        plt.ylabel("Bird Population")
+        
+        # Save the grpah 
+        if filename:
+            filename = f"results//{filename}.png"
+        else:
+            filename = "results//population_grapgh.png"
+        
+        plt.show()
+        plt.savefig(filename)
+        return f"Plot saved to {filename}"
+    
+    def make_bird_population_graph(self, filename=""):
+        plt.plot(range(0, self.df.shape[0]), self.df[["num_of_doves", "num_of_hawks"]])
+        plt.title("Population of Doves and Birds Over Time")
+        plt.xlabel("Days")
+        plt.ylabel("Number of Birds")
+        plt.legend(["Doves", "Hawks"])
 
+        # Save the grpah 
+        if filename:
+            filename = f"results//{filename}.png"
+        else:
+            filename = "results//bird_population_grapgh.png"
+        
+        plt.show()
+        plt.savefig(filename)
+        return f"Plot saved to {filename}"
+    
+    def make_calorie_graph(self, filename=""):
+        plt.plot(range(0, self.df.shape[0]), self.df[["total_calories", "calories_after_feeding"]])
+        plt.title("Calories Over Time")
+        plt.xlabel("Days")
+        plt.ylabel("Calories")
+        plt.legend(["Total Calories", "Calories After Feeding"])
+
+        # Save the grpah 
+        if filename:
+            filename = f"results//{filename}.png"
+        else:
+            filename = "results//calorie_graph.png"
+
+        plt.savefig(filename)
+        plt.show()
+        return f"Plot saved to {filename}"

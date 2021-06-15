@@ -2,8 +2,8 @@ try:
     import random as random
     import numpy as np
     import agressionSimulation as sim
-except:
-    raise ImportError("Unable to import required modules. Please install the requirements.txt file.")
+except ImportError as ex:
+    raise ImportError("Unable to import required modules. Please install the requirements.txt file.\n" + ex.with_traceback())
 
 NoneType = type(None)
 
@@ -59,15 +59,15 @@ class clearing():
         for bird in self.birds:
             if bird is None:
                 continue
-            bird.time()
             self.sl.add(bird, child=False)
+            bird.time()
 
         # Resolve aggression, procreation and clearing growth. Log the child (if there is a child). 
         children = self.resolve()
-        if children:
+        if len(children) != 0:
             self.sl.add(bird, child=True)
+       
         self.growth()
-
         new_cals = self.calories
 
         # Add the value of the calories to the correct environment 
@@ -136,6 +136,10 @@ class forest():
             possibleChild = clring.time()
             if len(possibleChild) != 0:
                 self.allBirds.extend(possibleChild)
+            for bird in clring.birds:
+                if not bird.alive:
+                    self.allBirds.remove(bird)
+                    del bird
 
             clring.reset()
 
@@ -143,6 +147,9 @@ class forest():
         for bird in self.nonOccupiedBirds:
             bird.time()
             self.sl.add(bird)
+            if not bird.alive:
+                self.allBirds.remove(bird)
+                del bird
         
         # Reset the list
         self.nonOccupiedBirds = []

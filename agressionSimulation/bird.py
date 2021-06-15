@@ -1,7 +1,7 @@
 try:
     import random 
-except:
-    raise ImportError("Unable to import required modules. Please install the requirements.txt file.")
+except ImportError as ex:
+    raise ImportError("Unable to import required modules. Please install the requirements.txt file.\n" + ex.with_traceback())
 
 NoneType = type(None)
 class bird():
@@ -29,8 +29,7 @@ class bird():
         self.calorieLimit = calorieLimit
         self.dailySpend = dailySpend
 
-        # keep track of it being set 
-        self.isSet = True
+        self.alive = True
 
     def time(self):
         self.calories -= self.dailySpend
@@ -108,7 +107,6 @@ class bird():
                 self.addCalories(totalCalories * 0.7)
                 other.addCalories(totalCalories * 0.3)
         
-        return 0
     
     def procreate(self, other):
         # Check to see if both birds can procreate and return array with results
@@ -128,8 +126,10 @@ class bird():
         offspring = bird("[" + str(self.id) + " | " + str(other.id) + "]")
         offspring_gender = "M" if random.random() < 0.5 else "F"
         offspring.setBirdChars(self.species, offspring_gender, self.startingCalories, self.calorieLimit, self.dailySpend)
+        offspring.alive = True
+        offspring.calories = self.startingCalories
         return [offspring]
     
     def show(self):
-        to_string = f"Status: {self.alive} | Bird Gender: {self.gender} | Bird Species: {self.species}"
+        to_string = f"Id: {self.id} | Status: {self.alive} | Bird Gender: {self.gender} | Bird Species: {self.species}"
         return to_string

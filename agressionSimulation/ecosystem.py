@@ -1,8 +1,9 @@
 try:
     import random as random
     import agressionSimulation as sim 
-except:
-    raise ImportError("Unable to import required modules. Please install the requirements.txt file.")
+    from tqdm import tqdm 
+except ImportError as ex:
+    raise ImportError("Unable to import required modules. Please install the requirements.txt file.\n" + ex.with_traceback())
 
 class ecosystem():
     # This class represents the ecosystem in which birds and the forest is stored 
@@ -56,6 +57,9 @@ class ecosystem():
 
             self.allBirds.append(newBird)
         
+        self.sl.new_day()
+        self.sl.increment(num_of_doves=self.numOfDoves(), num_of_hawks=self.numOfHawks())
+        
     def spawnForest(self, totalSpaces, calorieMean, calorieSD, growthMean, growthSD, max_search=3):
 
         # Create a forest class that contains a normal distribution of food
@@ -67,25 +71,37 @@ class ecosystem():
     def time(self, days=1):
         # A day passes in the ecosystem, with the time function called for all envrionments, (currently only the forest class)
         # Record all of the days events within the logger 
-        
-        for _ in range(0, days):
+
+        for _ in tqdm(range(0, days), desc="Simulating agression...", unit=" days", ncols=100, 
+                                        total=days, maxinterval=1):
             self.sl.new_day()
             self.forest.time()
-        
-        print("\n\nPreview of results:\n")
-        self.show_results(n=5)
     
-    def save_results(self, filename):
+    def save_results(self, filename, preview=False):
         # Save the results of the simulation
 
         self.sl.save(filename=filename)
-        print(f"Saved results to results//{filename}")
+        print(f"\nSaved results to results//{filename}")
+
+        if preview:
+            print("Preview of results: ")
+            self.show_results()
     
     def show_results(self, n=5):
         # Show the results of the simulation 
 
         self.sl.show(n=n)
     
-    def debug(self):
-        for num in range(0, len(self.allBirds)):
-            print(f"{num}: is {'alive' if self.allBirds[num].alive else 'dead'}")
+    def make_population_graph(self, filename=""):
+        print(self.sl.make_population_graph(filename))
+    
+    def make_bird_population_graph(self, filename=""):
+        print(self.sl.make_bird_population_graph(filename))
+
+    def make_calorie_graph(self, filename=""):
+        print(self.sl.make_calorie_graph(filename))
+    
+    def make_all_graphs(self):
+        self.make_bird_population_graph()
+        self.make_population_graph()
+        self.make_calorie_graph()
