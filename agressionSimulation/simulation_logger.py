@@ -5,6 +5,11 @@ except ImportError as ex:
     raise ImportError("Unable to import required modules. Please install the requirements.txt file.\n" + ex.with_traceback())
 
 class simulation_logger():
+    '''
+        Author: Rashed Rifat 
+        A simulation logger is an object used to record the data for the simulation. 
+    '''
+    
     def __init__(self):
         self.df_columns = ["day", "num_of_doves", "num_of_hawks", "population", 
                             "dove_births", "dove_deaths", "hawk_births", "hawk_deaths", "total_calories",
@@ -98,10 +103,10 @@ class simulation_logger():
         if filename:
             filename = f"results//{filename}.png"
         else:
-            filename = "results//population_grapgh.png"
+            filename = "results//population_graph.png"
         
-        plt.show()
         plt.savefig(filename)
+        plt.show()
         return f"Plot saved to {filename}"
     
     def make_bird_population_graph(self, filename=""):
@@ -115,10 +120,10 @@ class simulation_logger():
         if filename:
             filename = f"results//{filename}.png"
         else:
-            filename = "results//bird_population_grapgh.png"
+            filename = "results//bird_population_graph.png"
         
-        plt.show()
         plt.savefig(filename)
+        plt.show()
         return f"Plot saved to {filename}"
     
     def make_calorie_graph(self, filename=""):

@@ -64,7 +64,7 @@ class ecosystem():
 
         # Create a forest class that contains a normal distribution of food
         # with a normal distribution of growth (perhaps create a second distribution and add it to the first)
-        self.forest = sim.forest(totalSpaces, calorieMean, calorieSD, growthMean, growthSD, self.sl, 3)
+        self.forest = sim.forest(totalSpaces, calorieMean, calorieSD, growthMean, growthSD, self.sl, max_search=max_search)
         self.forest.load(self.allBirds)
 
 
