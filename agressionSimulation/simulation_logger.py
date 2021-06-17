@@ -18,7 +18,7 @@ class simulation_logger():
         self.day_counter = -1
         
     def new_day(self):
-        # Intialize a new row in the dataframe
+        ''' Intialize a new row in the dataframe. '''
 
         self.day_counter += 1
         self.df.loc[self.day_counter, "day"] = self.day_counter
@@ -29,7 +29,17 @@ class simulation_logger():
     def increment(self, num_of_doves=None, num_of_hawks=None, 
                         dove_births=None, dove_deaths=None, hawk_births=None, hawk_deaths=None):
        
-        # Increment the values recoreded within the database 
+        '''
+            Increment the columns stored within the database by some amount. 
+            Params:
+                num_of_doves (int):         the number of doves to increment by within the database 
+                num_of_hawks (int):         the number of hawks to increment by within the database 
+                dove_births (int):          the number of dove births to increment by within the database 
+                hawk_deaths (int):          the number of doves deaths to increment by within the database 
+                hawk_births (int):          the number of hawk births to increment by within the database 
+                hawk_deaths (int):          the number of hawk deaths to increment by within the database 
+        '''
+
         if num_of_doves is not None:
             self.df.loc[self.day_counter, "num_of_doves"] += num_of_doves
             self.df.loc[self.day_counter, "population"] += num_of_doves
@@ -55,7 +65,12 @@ class simulation_logger():
         print(self.df.head(n=n))
 
     def add(self, bird, child=False):
-        # Increment a bird based on its charactersitics 
+        '''
+            Logs a bird to the database, based on it characteristics such as species, gender and alive status. 
+            Params:
+                bird (sim.bird):        the bird object to be added to the logger
+                child (bool):           indicates if this bird is a child 
+        '''
 
         # Handle if bird is alive 
         if bird.alive:
@@ -81,7 +96,12 @@ class simulation_logger():
                 
 
     def add_space(self, data):
-        # Add the calories of a space 
+        '''
+            Adds the calories within a clearing to the database. 
+            Params:
+                data (list):        list of calories within the clearing 
+        '''
+
         col1 = "total_calories"
         col2 = "calories_after_feeding"
 
@@ -89,11 +109,23 @@ class simulation_logger():
         self.df.loc[self.day_counter, col2] += round(data[1], 2)
     
     def save(self, filename="simulation_results"):
+        '''
+            Saves the results of the simulation to filename.csv
+            Params:
+                filename (str):         the name of the file to save these results to in csv format 
+        '''
 
-        # Save the csv to the results folder, with a supplied filename
         self.df.to_csv(f"results//{filename.strip()}.csv")
     
     def make_population_graph(self, filename=""):
+        '''
+            Creates a population graph of the simulation over time. 
+            Params:
+                filename (str):         the filename for which to save the results for 
+            Returns:
+                str:                    the file name to which this plot was saved. 
+        '''
+
         plt.plot(range(0, self.df.shape[0]), self.df["population"])
         plt.title("Population of Birds Over Time")
         plt.xlabel("Days")
@@ -110,6 +142,14 @@ class simulation_logger():
         return f"Plot saved to {filename}"
     
     def make_bird_population_graph(self, filename=""):
+        '''
+            Creates a bird popluation graph of the simulation over time. 
+            Params:
+                filename (str):         the filename for which to save the results for 
+            Returns:
+                str:                    the file name to which this plot was saved. 
+        '''
+
         plt.plot(range(0, self.df.shape[0]), self.df[["num_of_doves", "num_of_hawks"]])
         plt.title("Population of Doves and Birds Over Time")
         plt.xlabel("Days")
@@ -127,6 +167,14 @@ class simulation_logger():
         return f"Plot saved to {filename}"
     
     def make_calorie_graph(self, filename=""):
+        '''
+            Creates a calorie graph of the simulation over time. 
+            Params:
+                filename (str):         the filename for which to save the results for 
+            Returns:
+                str:                    the file name to which this plot was saved. 
+        '''
+
         plt.plot(range(0, self.df.shape[0]), self.df[["total_calories", "calories_after_feeding"]])
         plt.title("Calories Over Time")
         plt.xlabel("Days")
