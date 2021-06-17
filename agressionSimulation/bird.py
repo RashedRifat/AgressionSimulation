@@ -30,7 +30,7 @@ class bird():
         '''
             Sets the characters for a bird. 
 
-            Parameters:
+            Params:
                 species (str):                  the species of the bird, either a hawk or a dove (H/D) 
                 gender (str):                   the gender of the bird, either male or female (M?F)
                 startingCalories (int):         the number of calories a bird starts with 
@@ -111,7 +111,7 @@ class bird():
         '''
             Adds calories to a bird. 
 
-            Parameters:
+            Params:
                 cals (int):         the number of calories to add 
         '''
 
@@ -126,7 +126,7 @@ class bird():
         '''
             Simulates a fight between two different birds, as dependent on their species, for some number of calories. 
             
-            Parameters:
+            Params:
                 other (bird):               the bird with which to aggress
                 totalCalories (int):        the total number of calories to distribute to the two birds
         '''
@@ -177,7 +177,7 @@ class bird():
         '''
             Attempts to simulate the procreation of a new bird from two parent birds. 
 
-            Parameters:
+            Params:
                 other (sim.bird):       the second parent 
 
             Returns

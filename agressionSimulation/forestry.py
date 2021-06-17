@@ -8,6 +8,10 @@ except ImportError as ex:
 NoneType = type(None)
 
 class clearing():
+    '''
+        Author: Rashed Rifat 
+        This class represents a clearing within a forest, a place for birds to gather food and procreate. 
+    '''
     
     def __init__(self, calories, growthMean, growthSD, simulation_logger, consumePerMeal=0.7,):
         self.calories = calories
@@ -18,6 +22,12 @@ class clearing():
         self.sl = simulation_logger
     
     def occupy(self, bird1):
+        '''
+            Allows a bird into the clearing. 
+            Params:
+                bird1 (sim.bird):       the bird to add to this clearing
+        '''
+
         if not isinstance(bird1, sim.bird):
             raise TypeError("bird1 should not be none")
         
@@ -27,12 +37,16 @@ class clearing():
         self.birds.append(bird1)
     
     def growth(self):
-        # Growth of the clearing in a single day 
+        '''
+            Grows the calories of a clearing by some random value drawn from a normal distribution.
+        '''
+
         self.calories += int(np.random.normal(loc=self.growthMean, scale=self.growthSD, size=1))
     
     def resolve(self):
-        # Resolves the agression between two birds and checks for procreation 
-        # Only part of the clearings calories are consumed 
+        '''
+            Resolves the distirbution of food to the birds within this clearing, as well as procreation.     
+        '''
 
         partialCalories = self.calories * self.consumePerMeal
         self.calories -= partialCalories
@@ -47,11 +61,16 @@ class clearing():
             return []
 
     def reset(self):
+        ''' 
+            Resets the birds stored within the clearing to None. 
+        '''
+
         self.birds = []
     
     def time(self):
-        # A day passes in the clearing
-        # This function returns the new children, if generated 
+        '''
+            Simulates a day passing within the forest and logs the results within the logger. 
+        '''
 
         old_cals = self.calories
 
@@ -75,6 +94,11 @@ class clearing():
         return children
 
 class forest():
+    ''' 
+        Author: Rashed Rifat 
+        This class represents a forest wehre the simulation takes place. A forest has multiple clearings 
+        where birds can either fight for/share food and procreate. 
+    '''
 
     def __init__(self, totalSpaces, calorieMean, calorieSD, growthMean, growthSD, simulation_logger, maxSearch=3):
         self.totalSpaces = totalSpaces
@@ -89,6 +113,12 @@ class forest():
         self.sl = simulation_logger
     
     def load(self, allBirds):
+        '''
+            Loads a list of birds into the forest and creates all the spaces within the forest. 
+            Params:
+                allBirds (list of sim.bird objects):        the set of birds with which to run the simulation 
+        '''
+
         self.allBirds = allBirds
 
         # Create all spaces  
@@ -97,6 +127,11 @@ class forest():
             self.spaces.append(clearing(calories, self.growthMean, self.growthSD, self.sl))           
     
     def occupy(self):
+        '''
+            Simulates the distribution of birds within the forest to the different clearings. 
+        '''
+
+
         # Shuffle all the birds 
         random.shuffle(self.allBirds)
         birdCounter = 0
@@ -129,6 +164,10 @@ class forest():
             
 
     def time(self):
+        '''
+            Simulates a day passing within the forest, recording the changes to the simulation logger. 
+        '''
+
         self.occupy()
 
         # Should call the time function on all clearings, adding new birds to the total birds list 
@@ -153,10 +192,3 @@ class forest():
         
         # Reset the list
         self.nonOccupiedBirds = []
-    
-    def debug(self):
-        self.occupy()
-
-        for space in self.spaces:
-            for elem in range(0, len(space.birds)):
-                print(f"{elem}: is {'alive' if space.birds[elem].alive else 'dead'}")
